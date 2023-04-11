@@ -6,6 +6,7 @@ Library     String
 Library     Collections
 Library     OperatingSystem
 
+
 *** Variables ***
 ${BASE_URL}      https://rpachallenge.com
 ${BROWSER}       chrome
@@ -30,7 +31,7 @@ Open RPA Challenge
 
 Download Excel File RPA Challenge
     Click Element  ${LOCATOR_BTN_DOWNLOAD_EXCEL}
-    File Should Exist    ${PATH_DOWNLOAD}\\${FILNAME_RPA}
+    Wait Until Created   ${PATH_DOWNLOAD}\\${FILNAME_RPA}
 
 Input FirstName=${param_firstname}
     Input Text  ${LOCATOR_INPUT_FIRSTNAME}  ${param_firstname}
@@ -104,16 +105,20 @@ Convert Data Cell Number to String
     #${data_phone_num}=      Remove String    ${data_phone}      ,   #If use Read Cell Data not set Use Format (boolean) false -> result data #,###.#0
     #${data_phone_number}=    Evaluate    "{0:.0f}".format(${data_type_number})
     [Return]    ${data_phone_number}
+
+Remove File Excel
+    Remove File     ${PATH_DOWNLOAD}\\${FILNAME_RPA} 
     
 
  
 *** Test Cases ***
 Test RPA Challenge
+    [Teardown]     Close Browser
     Open RPA Challenge
     Download Excel File RPA Challenge
     Open File Excel in Path
     Start RPA Challenge
     Read Data From File Excel and Input Data on Page
     Verify Page Input Data Success
-    [Teardown]
+    Remove File Excel
 
